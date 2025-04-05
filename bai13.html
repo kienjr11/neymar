@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .container{
+            display: grid;
+            grid-template-areas: 
+            "aa aa aa"
+            "bb cc dd"
+            "ee ee ee";
+            grid-template-columns: 1fr 3fr 1fr;
+            grid-template-rows: auto;
+        }
+        .a{background-color: orangered;
+        grid-area: aa;
+        text-align: center;}
+        .b{background-color:yellow;
+        grid-area: bb;
+        text-align: center;
+        }
+        .d{background-color:palevioletred;
+        grid-area: dd;
+        text-align: center;}
+        .e{background-color:greenyellow;
+        grid-area: ee;
+        text-align: center;}
+        .c{background-color:blue;
+        grid-area: cc;
+        text-align: center;}
+        @media (max-width:600px){
+        .container{
+        grid-template-columns: 1fr;
+        grid-template-rows: 50px auto auto auto 50px;
+        grid-template-areas: 
+        "aa"
+        "cc"
+        "bb"
+        "dd"
+        "ee";
+        }
+        .body{
+            font-size: 20px;
+        }
+    }
+    img{
+       width: 100%;
+        height: auto;
+       object-fit: cover;
+    }
+    </style>
+   <a href="bai11.html">Bai 11</a>
+   <a href="bai12.html">Bai 12</a>
+   <a href="bai13.html">Bai 13</a>
+   <a href="bai14.html">Bai 14</a>
+    <div class="container">
+        <div class="a">Header</div>
+        <div class="b">Aside1</div>
+        
+        <div class="c">
+                <div class="box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum iste nobis cumque, modi molestias magnam debitis reiciendis exercitationem ad commodi? Illum minus laboriosam sunt officiis aliquam reiciendis blanditiis ut inventore.
+                <img src="https://byvn.net/vhi1" width="400px">
+        </div>
+        </div>
+        <div class="d">Aside2</div>
+        <div class="e">Footer</div>
+    </div>
+</body>
+</html>

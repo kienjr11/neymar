@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="bai11.html">Bai 11</a>
+      <a href="bai12.html">Bai 12</a>
+      <a href="bai13.html">Bai 13</a>
+      <a href="bai14.html">Bai 14</a>
+    <style>
+        .container{
+            display: grid;
+            grid-template-areas:
+            "aa bb cc dd ee";
+            background-color:black;
+            color: azure;
+            text-align: center;
+            grid-template-columns: 1fr 1fr 1fr 1fr ;
+            grid-template-rows: auto;
+            
+        }
+        .a{grid-area: aa;padding: 5px;
+        }
+        .b{grid-area: bb;padding: 5px;}
+        .c{grid-area: cc;padding: 5px;}
+        .d{grid-area: dd;padding: 5px;}
+        .e{grid-area: ee;padding: 5px;display: none;}
+        @media(max-width:600px){
+            .container{
+                grid-template-areas:
+                "ee"
+                "aa"
+                "bb"
+                "cc"
+                "dd";
+                grid-template-rows: 1fr 1fr 1fr 1fr 1fr ;
+                grid-template-columns: auto; 
+            }
+            .e{display: block;
+            text-align: right;}
+        }
+    </style>
+    <div class="container">
+        <div class="a">Home</div>
+        <div class="b">News</div>
+        <div class="c">Contact</div>
+        <div class="d">About</div>
+        <div class="e"><img src="https://byvn.net/WH39" width="20px"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   
+</head>
+<body>
+    <style>
+  
+        
+.container{
+    display: grid;
+    grid-template-areas: 
+    "aa  aa aa"
+    "bb  cc dd"
+    "ee  ee ee";
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: auto;
+
+}
+.a{background-color: orange;
+grid-area: aa;
+text-align: center;
+align-content: center;}
+.b{background-color:yellow;
+grid-area: bb;
+text-align: center;
+align-content: center;
+height: 400px;
+}
+.c{background-color:blue;
+grid-area: cc;
+text-align: center;
+align-content: center;}
+.d{background-color: palevioletred;
+grid-area: dd;
+text-align: center;
+align-content: center;
+}
+.e{background-color: greenyellow;
+grid-area: ee;
+text-align: center;
+align-content: center;}
+@media (max-width:1200px){
+        .container{
+        grid-template-areas:
+        "aa aa"
+        "cc cc"
+        "bb dd"
+        "ee ee";
+        grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;}
+       }
+@media(max-width:600px){
+    .container{
+        grid-template-areas:
+        "aa "
+        "cc " 
+        "bb"
+        "dd"
+        "ee";
+        grid-template-columns: 1fr ;
+    grid-template-rows: auto;
+    }
+}
+    </style>
+     <a href="bai11.html">Bai 11</a>
+     <a href="bai12.html">Bai 12</a>
+     <a href="bai13.html">Bai 13</a>
+     <a href="bai14.html">Bai 14</a>
+    <div class="container">
+        <div class="a">Header</div>
+        <div class="b">Aside1</div>
+        <div class="c">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, tempora beatae. Facilis nemo exercitationem repudiandae odio architecto? Eaque quia voluptates fuga voluptatibus aliquam doloribus nisi adipisci ex? Omnis, harum repudiandae.</div>
+        <div class="d">Aside2</div>
+        <div class="e">Footer</div>
+    </div>
+</body>
+</html>
