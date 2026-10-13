@@ -1,0 +1,244 @@
+\documentclass[14pt]{extarticle}
+\usepackage[utf8]{vietnam}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{newtxtext,newtxmath} % Phông chữ Times New Roman cho văn bản và công thức
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{array}
+
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{0.5em}
+\renewcommand{\baselinestretch}{1.3}
+
+\setcounter{section}{4} % Thiết lập bắt đầu từ Mục 5
+
+\begin{document}
+
+\section{ỨNG DỤNG PHƯƠNG TRÌNH VI PHÂN TRONG MÔ HÌNH NỒNG ĐỘ DUNG DỊCH MUỐI}
+
+\subsection{Giới thiệu hiện tượng pha trộn dung dịch muối}
+Bài toán pha trộn chất lỏng (\textit{Liquid Mixing Problem}) là một trong những ứng dụng kinh điển và có tính ứng dụng thực tiễn cao nhất của phương trình vi phân tuyến tính cấp 1. Trong thực tế công nghiệp và đời sống, các quá trình trao đổi chất và khuấy trộn dung dịch diễn ra liên tục tại các hệ thống mở: một dung dịch chứa chất hòa tan (như muối, hóa chất, chất màu, hoặc thuốc) được bơm liên tục vào bể chứa, đồng thời dung dịch trong bể sau khi được hòa tan được xả ra ngoài.
+
+Một số ứng dụng thực tiễn mang tính cốt lõi bao gồm:
+\begin{itemize}
+    \item \textbf{Công nghệ hóa chất và thực phẩm:} Điều khiển nồng độ phản ứng trong bể khuấy liên tục (\textit{Continuous Stirred-Tank Reactor - CSTR}) để tối ưu hóa hiệu suất tổng hợp sản phẩm, đảm bảo chất lượng đồng đều trong dây chuyền sản xuất đồ uống, phân bón.
+    \item \textbf{Kỹ thuật môi trường:} Tính toán thời gian pha loãng và dự báo sự lan truyền của nồng độ chất xả thải độc hại (như kim loại nặng, chất thải hữu cơ) trong hệ thống sông, hồ hoặc bể xử lý nước thải.
+    \item \textbf{Y sinh học và Dược động học (\textit{Pharmacokinetics}):} Mô hình hóa quá trình truyền dịch tĩnh mạch liên tục và tốc độ đảo thải thuốc qua thận, giúp xác định liều lượng duy trì tối ưu cho bệnh nhân mà không gây độc tính.
+\end{itemize}
+
+Việc xây dựng một mô hình toán học chính xác giúp dự đoán định lượng khối lượng và nồng độ chất hòa tan tại bất kỳ thời điểm $t$ nào, từ đó đưa ra các quyết định điều khiển hệ thống tự động.
+
+\subsection{Định luật bảo toàn khối lượng và nguyên lý xây dựng mô hình}
+Nền tảng toán học của mô hình pha trộn dựa trên \textbf{Định luật bảo toàn khối lượng} áp dụng cho chất hòa tan trong hệ thống mở.
+
+Gọi $t$ là thời gian ($t \ge 0$, đơn vị: $\text{phút}$) và $y(t)$ là khối lượng muối có trong bể tại thời điểm $t$ (đơn vị: $\text{kg}$). Tốc độ biến thiên khối lượng muối theo thời gian chính là đạo hàm bậc nhất $\dfrac{dy}{dt}$ ($\text{kg/phút}$).
+
+Theo định luật bảo toàn khối lượng:
+\begin{equation}
+\frac{dy}{dt} = \text{Tốc độ muối đi vào} - \text{Tốc độ muối đi ra} = \text{IN} - \text{OUT}
+\label{eq:conservation_full}
+\end{equation}
+
+Các thông số động học của hệ thống bao gồm:
+\begin{itemize}
+    \item $V(t)$: Thể tích dung dịch trong bể tại thời điểm $t$ ($\text{lít}$).
+    \item $V_0$: Thể tích dung dịch ban đầu tại $t = 0$ ($\text{lít}$).
+    \item $r_{\text{vào}}$: Tốc độ thể tích của dòng bơm vào ($\text{lít/phút}$).
+    \item $c_{\text{vào}}(t)$: Nồng độ muối trong dòng bơm vào ($\text{kg/lít}$).
+    \item $r_{\text{ra}}$: Tốc độ thể tích của dòng tháo ra ($\text{lít/phút}$).
+    \item $c_{\text{ra}}(t)$: Nồng độ muối trong dòng tháo ra tại thời điểm $t$ ($\text{kg/lít}$).
+\end{itemize}
+
+\textbf{Giả định cốt lõi của mô hình (Perfect Mixing Assumption):}
+Dung dịch trong bể được khuấy trộn tức thời và hoàn toàn đồng nhất tại mọi vị trí trong bể ở thời điểm $t$. Do đó, nồng độ muối ở mọi vị trí trong bể đều bằng nhau và đúng bằng nồng độ của dòng chảy ra:
+\begin{equation}
+c_{\text{ra}}(t) = \frac{y(t)}{V(t)}
+\end{equation}
+
+\subsection{Xây dựng phương trình vi phân tổng quát}
+Để thiết lập phương trình vi phân, ta phân tích thứ nguyên vật lý của từng thành phần trong Phương trình~\eqref{eq:conservation_full}:
+
+1. \textbf{Tốc độ muối đi vào bể ($\text{IN}$):}
+$$\text{IN} = r_{\text{vào}} \cdot c_{\text{vào}}(t) \quad \left[\frac{\text{lít}}{\text{phút}} \times \frac{\text{kg}}{\text{lít}} = \frac{\text{kg}}{\text{phút}}\right]$$
+
+2. \textbf{Tốc độ muối đi ra khỏi bể ($\text{OUT}$):}
+$$\text{OUT} = r_{\text{ra}} \cdot c_{\text{ra}}(t) = r_{\text{ra}} \cdot \frac{y(t)}{V(t)} \quad \left[\frac{\text{lít}}{\text{phút}} \times \frac{\text{kg}}{\text{lít}} = \frac{\text{kg}}{\text{phút}}\right]$$
+
+3. \textbf{Phương trình biến thiên thể tích $V(t)$:}
+Tốc độ thay đổi thể tích tổng cộng của dung dịch trong bể tuân theo phương trình:
+$$\frac{dV}{dt} = r_{\text{vào}} - r_{\text{ra}}$$
+Tích phân hai vế với điều kiện ban đầu $V(0) = V_0$, ta thu được thể tích tại thời điểm $t$:
+\begin{equation}
+V(t) = V_0 + (r_{\text{vào}} - r_{\text{ra}})t
+\end{equation}
+
+Kết hợp các thành phần trên, ta có \textbf{Phương trình vi phân tổng quát}:
+\begin{equation}
+\frac{dy}{dt} + \frac{r_{\text{ra}}}{V_0 + (r_{\text{vào}} - r_{\text{ra}})t} \, y(t) = r_{\text{vào}} \cdot c_{\text{vào}}(t)
+\label{eq:master_ode}
+\end{equation}
+
+Kết hợp với điều kiện ban đầu $y(0) = y_0$, bài toán hình thành một bài toán giá trị ban đầu Cauchy (IVP) hoàn chỉnh.
+
+\subsection{Phương pháp giải toán tổng quát và các trường hợp}
+
+\subsubsection{Trường hợp 1: Thể tích bể không đổi ($r_{\text{vào}} = r_{\text{ra}} = r$)}
+Khi tốc độ vào và ra bằng nhau, $V(t) = V_0$. Giả sử nồng độ vào là hằng số $c_{\text{vào}}$, phương trình trở thành phương trình tuyến tính hệ số hằng:
+$$\frac{dy}{dt} + \frac{r}{V_0}y = r \cdot c_{\text{vào}}$$
+
+Thừa số tích phân: $\mu(t) = e^{\int \frac{r}{V_0} dt} = e^{\frac{r}{V_0}t}$. Nhân hai vế với $\mu(t)$:
+$$\frac{d}{dt}\left[y(t) e^{\frac{r}{V_0}t}\right] = r \cdot c_{\text{vào}} e^{\frac{r}{V_0}t}$$
+
+Tích phân hai vế và chia cho $e^{\frac{r}{V_0}t}$:
+$$y(t) e^{\frac{r}{V_0}t} = c_{\text{vào}}V_0 e^{\frac{r}{V_0}t} + C \implies y(t) = c_{\text{vào}}V_0 + C e^{-\frac{r}{V_0}t}$$
+
+Từ điều kiện $y(0) = y_0 \implies C = y_0 - c_{\text{vào}}V_0$. Vậy nghiệm riêng duy nhất là:
+\begin{equation}
+y(t) = c_{\text{vào}}V_0 + \left(y_0 - c_{\text{vào}}V_0\right)e^{-\frac{r}{V_0}t}
+\end{equation}
+
+\subsubsection{Trường hợp 2: Thể tích bể thay đổi theo thời gian ($r_{\text{vào}} \neq r_{\text{ra}}$)}
+Khi $r_{\text{vào}} \neq r_{\text{ra}}$, phương trình vi phân có dạng $y' + P(t)y = Q(t)$ với $P(t) = \dfrac{r_{\text{ra}}}{V_0 + \Delta r \cdot t}$ (với $\Delta r = r_{\text{vào}} - r_{\text{ra}}$).
+
+Thừa số tích phân thu được:
+$$\mu(t) = e^{\int \frac{r_{\text{ra}}}{V_0 + \Delta r \cdot t} dt} = \left(V_0 + \Delta r \cdot t\right)^{\frac{r_{\text{ra}}}{\Delta r}}$$
+Nghiệm tổng quát của phương trình được tìm thông qua tích phân:
+\begin{equation}
+y(t) = \frac{1}{\mu(t)} \left[ \int \mu(t) \cdot r_{\text{vào}} c_{\text{vào}} \, dt + C \right]
+\end{equation}
+
+\subsection{Bài toán minh họa và tính toán chi tiết}
+
+\textbf{Đề bài:} Một bể chứa ban đầu có $1000\text{ lít}$ nước thuần khiết ($y_0 = 0\text{ kg}$). Người ta bắt đầu bơm vào bể một dung dịch muối có nồng độ $c_{\text{vào}} = 0.05\text{ kg/lít}$ với tốc độ $r_{\text{vào}} = 10\text{ lít/phút}$. Dung dịch được khuấy đều liên tục và xả ra khỏi bể với tốc độ $r_{\text{ra}} = 10\text{ lít/phút}$.
+
+\begin{enumerate}
+    \item Lập phương trình vi phân và xác định hàm số khối lượng muối $y(t)$ theo thời gian.
+    \item Lập bảng giá trị chi tiết khối lượng muối $y(t)$ và nồng độ $c(t)$ tại các thời điểm $t = 0, 10, 30, 60, 120, 300\text{ phút}$.
+    \item Xác định chính xác thời điểm $t$ mà khối lượng muối đạt $90\%$ mức bão hòa tối đa.
+\end{enumerate}
+
+\textbf{Lời giải chi tiết:}
+
+\begin{enumerate}
+    \item \textbf{Thiết lập hàm $y(t)$:}
+    Do $r_{\text{vào}} = r_{\text{ra}} = 10\text{ L/phút}$, thể tích $V(t) = V_0 = 1000\text{ L}$.
+    
+    $\text{IN} = 10 \times 0.05 = 0.5\text{ kg/phút}$.\\
+    $\text{OUT} = 10 \times \dfrac{y(t)}{1000} = 0.01 y(t)\text{ kg/phút}$.
+    
+    Phương trình vi phân:
+    $$\frac{dy}{dt} + 0.01 y = 0.5$$
+    
+    Áp dụng công thức nghiệm riêng với $y(0) = 0$:
+    $$y(t) = 0.05 \times 1000 + (0 - 0.05 \times 1000) e^{-0.01 t} = 50\left(1 - e^{-0.01t}\right) \quad (\text{kg})$$
+
+    \item \textbf{Bảng kết quả tính toán chi tiết:}
+    Nồng độ dung dịch $c(t) = \dfrac{y(t)}{1000} = 0.05\left(1 - e^{-0.01t}\right)\text{ kg/lít}$.
+
+    \begin{table}[htbp]
+    \centering
+    \caption{Khối lượng muối $y(t)$ và nồng độ $c(t)$ qua các mốc thời gian}
+    \begin{tabular}{c c c c}
+        \toprule
+        \textbf{Thời gian $t$ (phút)} & \textbf{Giá trị $e^{-0.01t}$} & \textbf{Khối lượng muối $y(t)$ (kg)} & \textbf{Nồng độ $c(t)$ (kg/L)} \\
+        \midrule
+        0 & 1.00000 & 0.000 & 0.00000 \\
+        10 & 0.90484 & 4.758 & 0.00476 \\
+        30 & 0.74082 & 12.959 & 0.01296 \\
+        60 & 0.54881 & 22.559 & 0.02256 \\
+        120 & 0.30119 & 34.940 & 0.03494 \\
+        300 & 0.04979 & 47.511 & 0.04751 \\
+        \bottomrule
+    \end{tabular}
+    \end{table}
+
+    \item \textbf{Thời gian đạt $90\%$ trạng thái bão hòa:}
+    Mức muối tối đa là $y_{\max} = \lim_{t \to \infty} y(t) = 50\text{ kg}$.
+    
+    $90\%$ của mức tối đa tương ứng $y(t) = 45\text{ kg}$. Ta giải phương trình:
+    $$50\left(1 - e^{-0.01t}\right) = 45 \iff e^{-0.01t} = 0.1$$
+    $$-0.01t = \ln(0.1) = -\ln(10) \implies t = \frac{\ln(10)}{0.01} \approx 230.26\text{ phút}$$
+    Đổi ra giờ: $t \approx 3\text{ giờ } 50\text{ phút } 15\text{ giây}$.
+\end{enumerate}
+
+\subsection{Phân tích kết quả và đồ thị mô hình}
+
+\begin{enumerate}
+    \item \textbf{Đặc tính động học:}
+    Tốc độ tăng muối $\dfrac{dy}{dt} = 0.5 e^{-0.01t}$ đạt cực đại tại $t = 0$ ($\dfrac{dy}{dt} = 0.5\text{ kg/phút}$) và giảm dần theo hàm mũ về 0 khi thời gian tiến ra vô cùng.
+    
+    \item \textbf{Trạng thái dừng (\textit{Steady-State}):}
+    Khi $t \to \infty$, $e^{-0.01t} \to 0$. Khối lượng muối tiến đến giá trị cân bằng $y(\infty) = 50\text{ kg}$, và nồng độ đạt $c(\infty) = 0.05\text{ kg/L}$ đúng bằng nồng độ dòng vào.
+    
+    \item \textbf{Hằng số thời gian $\tau$:}
+    Đại lượng $\tau = \dfrac{V_0}{r} = 100\text{ phút}$ đại diện cho thời gian đặc trưng của hệ. Sau $t = \tau$, hệ đạt $63.2\%$ dung lượng bão hòa; sau $t = 3\tau = 300\text{ phút}$, hệ đạt $95\%$ dung lượng.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.88\textwidth,
+    height=0.52\textwidth,
+    xlabel={Thời gian $t$ (phút)},
+    ylabel={Khối lượng muối $y(t)$ (kg)},
+    xmin=0, xmax=320,
+    ymin=0, ymax=60,
+    xtick={0, 50, 100, 150, 200, 230.26, 300},
+    xticklabels={0, 50, 100, 150, 200, 230.26, 300},
+    ytick={0, 10, 20, 30, 40, 45, 50, 60},
+    grid=major,
+    grid style={dashed, gray!30},
+    axis lines=left,
+    legend pos=south east,
+    thick
+]
+\addplot [
+    domain=0:310, 
+    samples=120, 
+    color=blue,
+    very thick
+] {50*(1 - exp(-0.01*x))};
+\addlegendentry{$y(t) = 50(1 - e^{-0.01t})$}
+
+\addplot [
+    domain=0:310,
+    dashed,
+    color=red,
+    thick
+] {50};
+\addlegendentry{Trạng thái dừng $y_{\max} = 50\text{ kg}$}
+
+\node[circle, fill=black, inner sep=1.5pt, label={above left:\small $(230.26; 45)$}] at (axis cs:230.26,45) {};
+\draw[dotted, very thick, gray] (axis cs:230.26,0) -- (axis cs:230.26,45) -- (axis cs:0,45);
+
+\end{axis}
+\end{tikzpicture}
+\caption{Đồ thị sự biến thiên khối lượng muối $y(t)$ tiến tới trạng thái bão hòa}
+\label{fig:salt_curve_detailed}
+\end{figure}
+
+\subsection{Ứng dụng mở rộng và hạn chế thực tế}
+
+\begin{itemize}
+    \item \textbf{Mở rộng hệ chuỗi bể chứa nối tiếp (\textit{Cascaded Tanks}):}
+    Trong thực tế sản xuất công nghiệp, dung dịch thường chảy nối tiếp qua nhiều bể ($B_1 \to B_2 \to \dots \to B_n$). Khi đó, dòng xả ra của bể $B_1$ sẽ là dòng vào của bể $B_2$. Hệ phương trình vi phân mô tả khối lượng muối $y_1(t)$ và $y_2(t)$ có dạng hệ tuyến tính:
+    $$\begin{cases}
+    \dfrac{dy_1}{dt} + \dfrac{r}{V_1}y_1 = r \cdot c_{\text{vào}} \\[8pt]
+    \dfrac{dy_2}{dt} + \dfrac{r}{V_2}y_2 = \dfrac{r}{V_1}y_1(t)
+    \end{cases}$$
+    Việc giải hệ này cho phép tối ưu hóa số lượng bể phản ứng trong quy trình sản xuất liên tục.
+
+    \item \textbf{Hạn chế của mô hình lý thuyết và giải pháp khắc phục:}
+    \begin{itemize}
+        \item \textbf{Khuấy không đồng nhất:} Hiện tượng dòng xả tắt (\textit{short-circuiting}) hoặc vùng đọng (\textit{dead zones}) trong bể thực tế khiến nồng độ không đồng nhất. Cần mở rộng sang phương trình đạo hàm riêng phân bố không gian-thời gian (PDE - Navier-Stokes kết hợp phương trình khuếch tán-tải ẩn).
+        \item \textbf{Dòng vào biến thiên:} Nồng độ vào $c_{\text{vào}}(t)$ hoặc tốc độ bơm $r(t)$ biến đổi tuần hoàn (ví dụ xả thải theo chu kỳ). Khi đó ta sử dụng phương pháp biến đổi Laplace để giải phương trình vi phân.
+    \end{itemize}
+\end{itemize}
+
+\end{document}
